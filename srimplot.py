@@ -7,10 +7,22 @@ import scienceplots
 darkgrey = "#000000"
 plt.style.use("science")
 
-filename = "213Rn_5umNi/213Rn_5umNi"
-depth, counts500, _ = np.genfromtxt(filename + "_Ar500mbar.txt", unpack=True)
-depth, counts750, _ = np.genfromtxt(filename + "_Ar750mbar.txt", unpack=True)
-depth, counts1000, _ = np.genfromtxt(filename + "_Ar1000mbar.txt", unpack=True)
+#############################################################
+
+beam = "213Rn"
+energy_MeV = "131"
+thickness_um = "15"
+material = "Mylar"
+gas = "Ar"
+
+#############################################################
+A = beam[:-2]
+nuc = beam[-2:]
+file = beam + "_" + thickness_um + "um" + material + "_" + gas
+filename = file + "/" + file
+depth, counts500, _ = np.genfromtxt(filename + "500mbar.txt", unpack=True)
+depth, counts750, _ = np.genfromtxt(filename + "750mbar.txt", unpack=True)
+depth, counts1000, _ = np.genfromtxt(filename + "1000mbar.txt", unpack=True)
 depth = depth / 1e7
 
 fig = plt.figure()
@@ -63,10 +75,21 @@ ax.set_ylabel("Linear density (cm$^{-1}$)")
 
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(reversed(handles), reversed(labels), fontsize="small")
-ax.text(2, 1.2 * maximum, "$^{213}$Rn @ 131$\,$MeV", size="smaller")
-ax.text(2, 1.1 * maximum, "5$\,\mu$m Ni window", size="smaller")
-# ax.text(5, 0.65 * counts.max(), "Ar @ 750$\,$mbar")
+ax.text(
+    2,
+    1.2 * maximum,
+    "$^{" + A + "}$" + nuc + " @ " + energy_MeV + "$\,$MeV",
+    size="smaller",
+)
 
-# ax.savefig(filename.strip(".txt") + ".pdf", bbox_inches="tight", transparent="True")
+if "h" in thickness_um:
+    thickness_um = thickness_um.replace("h", ".5")
+
+ax.text(
+    2,
+    1.1 * maximum,
+    thickness_um + "$\,\mu$m " + material + " window, " + gas + " gas",
+    size="smaller",
+)
 
 plt.savefig(filename + ".pdf", bbox_inches="tight", transparent="True")
